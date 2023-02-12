@@ -1,27 +1,38 @@
 import { Injectable } from "@nestjs/common";
-import { AdminDTO } from "src/DTO's/adminDTO";
-import { Cookie } from "express-session";
-import * as cookie from "cookie-parser";
 
 
 @Injectable()
 export class LoginService{
     
-    private dammyAdminData=[{Uname:"Admin1",Password:"1234"},
-    {Uname:"Admin2",Password:"1234"}]
+    private dammyCitizenLoginData=[{name:"citizen1",nid:"1234567890000"},
+                                    {name:"citizen2",nid:"1234567890001"},
+                                    {name:"citizen3",nid:"1234567890002"}]
+
+    
+
     
     uname:string;
-    adminLogin(admin){
-        const adminData=this.dammyAdminData.find(e=>e.Uname==admin.Uname && e.Password==admin.Password)
-        if(!adminData){return "UserName Or Password Invalid"}
-        else{
-            cookie("uname",admin.Uname);
-                
+    citizenLogin(citizen){
+        const citizenData=this.dammyCitizenLoginData.find(e=>e.name==citizen.name && e.nid==citizen.nid)
+        if(!citizenData){return "UserName Or Password Invalid"}
+        else{    
             return "Login Successful"}
         
     }
+    citigenSignup(citizen){
+        const citizenData=this.dammyCitizenLoginData.find(e=>e.nid==citizen.nid);
+        if(!citizenData){
+            let newCitizenInfo={name:citizen.name, nid:citizen.nid};
+            this.dammyCitizenLoginData.push(newCitizenInfo);
+            return "Signup Successful";
+        }
+        else{
+            return "this NID already have an account";
+        }
+        
+    }
 
-    adminCount(){
-        return this.dammyAdminData.length;
+    citizenCount(){
+        return this.dammyCitizenLoginData.length;
     }
 }
