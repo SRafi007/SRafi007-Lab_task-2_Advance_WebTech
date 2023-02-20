@@ -8,7 +8,6 @@ export class LoginService{
                                     {name:"citizen2",nid:"1234567890001"},
                                     {name:"citizen3",nid:"1234567890002"}]
 
-    
 
     
     uname:string;

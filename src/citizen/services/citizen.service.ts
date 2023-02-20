@@ -1,9 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import { MailDTO, sentMailDTO } from "src/DTO's/mailDTO";
 import { CitizenDTO } from "src/DTO's/citizenDTO";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Citizen } from "src/entities/citizens.entity";
+import { Repository } from "typeorm";
 
 @Injectable()
 export class CitizenService {
+    constructor(
+                @InjectRepository(Citizen)
+                private citizenRepo: Repository<Citizen>,
+    ){}
 
 
     private dammyCitizenData=[{id:1,name:"citizen1",nid:1234567890001,phoneNumber:"01790084943",email:"citizen1@gmail.com"},
@@ -21,14 +28,13 @@ getCitizenData(){
     return this.dammyCitizenData;
 }
 citigenSignup(citizen){
-    const citizenData=this.dammyCitizenData.find(e=>e.nid==citizen.nid);
-    if(!citizenData){
+    /*this.citizenRepo.save(citizen);
+    return "Signup Successful";*/
+    
+    const citizenData=this.citizenRepo.find(citizen.nid);
+    if(citizenData){
 
-        let tempLength=this.dammyCitizenData.length-1;
-        this.dammyID=this.dammyCitizenData[tempLength].id+1;
-        let newCitizen={id:this.dammyID,name:citizen.name,nid:citizen.nid,phoneNumber:citizen.phoneNumber,email:citizen.email}
-        
-        this.dammyCitizenData.push(newCitizen);
+        this.citizenRepo.save(citizen);
         return "Signup Successful";
     }
     else{
@@ -38,7 +44,7 @@ citigenSignup(citizen){
 }
 
 citizenProfile(id){
-    const info=this.dammyCitizenData.find(e=>e.id==id);
+    const info=this.dammyCitizenData.find(id=>id);
     if(!info){
         return "Please enter A Valid Id";
     }
@@ -49,10 +55,8 @@ citizenProfile(id){
 
 
 sendMail(mail:sentMailDTO){
-    let tempLength=this.dammyMails.length-1;
-    this.dammyID=this.dammyMails[tempLength].id+1;
-    let newMail={id:this.dammyID,senderMail:mail.senderMail,message:mail.message,receiverMail:mail.receiverMail}
-    this.dammyMails.push(newMail);
+
+    //this.dammyMails.push(mail);
     return "Sent";
 }
 mailbox(mailAddress) {
